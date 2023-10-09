@@ -1,0 +1,3 @@
+package alexey.tools.server.world
+
+interface EntitySubscriptionListener: OnInsertSubscriptionListener, OnRemoveSubscriptionListener
