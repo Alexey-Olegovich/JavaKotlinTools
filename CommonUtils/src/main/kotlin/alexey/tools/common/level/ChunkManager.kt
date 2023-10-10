@@ -21,6 +21,15 @@ open class ChunkManager(val visibleRadius: Int = 2) {
 
     open fun clearListener() { listener = Listener.DEFAULT }
 
+    fun getListener() = listener
+
+    fun notifyShowListener(entityId: Int) {
+        val chunk = getChunk(entityId) ?: return
+        val singleton = use(entityId)
+        listener.onEnable(chunk.getUpdaters(), singleton, chunk, true)
+        listener.onShow(chunk.getObservers(), singleton, chunk, true)
+    }
+
 
 
     fun getChunk(x: Int, y: Int): Chunk? = getChunk(IntVector2(x, y))

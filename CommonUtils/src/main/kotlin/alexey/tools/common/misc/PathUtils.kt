@@ -10,6 +10,11 @@ fun String.getExtension(c: Char = '.'): String {
     return if (index == -1) this else substring(index)
 }
 
+fun String.getExtensionText(c: Char = '.'): String {
+    val index = lastIndexOf(c)
+    return if (index == -1) this else substring(index + 1)
+}
+
 fun String.getName(s: Char = '/'): String {
     val end = lastIndexOf(s)
     if (end == -1) return this

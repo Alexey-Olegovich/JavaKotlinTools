@@ -1,35 +1,34 @@
 package alexey.tools.server.models
 
-import alexey.tools.common.context.ImmutableVariables
 import alexey.tools.common.collections.convert
+import alexey.tools.common.context.ImmutableVariables
 
-interface EntityModel {
-    val x: Float
-    val y: Float
-    val width: Float
-    val height: Float
-    val angle: Float
-    val layer: Int
-    val type: String
-    val id: Long
-    val shapes: List<ShapeModel>
-    val properties: ImmutableVariables
+class EntityModel(val x: Float = 0F,
+                  val y: Float = 0F,
+                  val width: Float = 0F,
+                  val height: Float = 0F,
+                  val angle: Float = 0F,
+                  val layer: Int = 0,
+                  val type: String = "",
+                  val id: Long = -1,
+                  val shapes: List<ShapeModel> = emptyList(),
+                  val properties: ImmutableVariables = ImmutableVariables.DEFAULT) {
 
 
 
     fun with(x: Float = this.x, y: Float = this.y,
              width: Float = this.width, height: Float = this.height,
              rotation: Float = this.angle, layer: Int = this.layer, type: String = this.type,
-             properties: ImmutableVariables = ImmutableVariables.DEFAULT): DefaultEntity =
+             properties: ImmutableVariables = ImmutableVariables.DEFAULT): EntityModel =
 
-        DefaultEntity(x, y, width, height, rotation, layer, type.ifEmpty { this.type }, id,
+        EntityModel(x, y, width, height, rotation, layer, type.ifEmpty { this.type }, id,
             scaledShapes(width, height), this.properties + properties)
 
-    fun with(x: Float, y: Float, layer: Int): DefaultEntity =
-        DefaultEntity(x, y, width, height, angle, layer, type, id, shapes, properties)
+    fun with(x: Float, y: Float, layer: Int): EntityModel =
+        EntityModel(x, y, width, height, angle, layer, type, id, shapes, properties)
 
-    fun with(entityModel: EntityModel): DefaultEntity =
-        DefaultEntity(entityModel.x, entityModel.y, width, height, entityModel.angle,
+    fun with(entityModel: EntityModel): EntityModel =
+        EntityModel(entityModel.x, entityModel.y, width, height, entityModel.angle,
             entityModel.layer, type, id, shapes, properties)
 
 
@@ -51,15 +50,41 @@ interface EntityModel {
 
 
 
+    override fun toString(): String = StringBuilder().apply {
+        append("{ x = ")
+        append(x)
+        append("; y = ")
+        append(y)
+        append("; width = ")
+        append(width)
+        append("; height = ")
+        append(height)
+        append("; angle = ")
+        append(angle)
+        append("; layer = ")
+        append(layer)
+        append("; type = ")
+        append(type)
+        append("; shapes = ")
+        append(shapes)
+        append("; properties = ")
+        append(properties)
+        append("; index = ")
+        append(id)
+        append(" }")
+    }.toString()
+
+
+
     companion object {
-        val DEFAULT: EntityModel = DefaultEntity()
+        val DEFAULT = EntityModel()
 
         fun newInstance(width: Float = 0F,
                         height: Float = 0F,
                         type: String = "",
                         index: Long = -1,
                         shapeModels: List<ShapeModel> = emptyList(),
-                        properties: ImmutableVariables = ImmutableVariables.DEFAULT): DefaultEntity =
-            DefaultEntity(0F, 0F, width, height, 0F, 0, type, index, shapeModels, properties)
+                        properties: ImmutableVariables = ImmutableVariables.DEFAULT): EntityModel =
+            EntityModel(0F, 0F, width, height, 0F, 0, type, index, shapeModels, properties)
     }
 }

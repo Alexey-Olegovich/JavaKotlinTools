@@ -2,7 +2,6 @@ package alexey.tools.server.serializers
 
 import alexey.tools.common.collections.ObjectList
 import alexey.tools.common.context.ImmutableVariables
-import alexey.tools.server.models.DefaultEntity
 import alexey.tools.server.models.EntityModel
 import alexey.tools.server.models.ShapeModel
 import com.esotericsoftware.kryo.Kryo
@@ -36,7 +35,7 @@ class EntityModelSerializer(private val shapeModelSerializer: Serializer<*>,
 
         val properties = kryo.readObject(input, ImmutableVariables::class.java, variablesSerializer)
 
-        return DefaultEntity(input.readFloat(), input.readFloat(), input.readFloat(), input.readFloat(),
+        return EntityModel(input.readFloat(), input.readFloat(), input.readFloat(), input.readFloat(),
             input.readFloat(), input.readVarInt(true), input.readString(), input.readVarLong(true), shapes, properties)
     }
 }
