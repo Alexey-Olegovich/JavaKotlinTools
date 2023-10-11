@@ -1,18 +1,15 @@
 package alexey.tools.server.world
 
-import alexey.tools.common.collections.forEachInt
-import alexey.tools.common.level.*
 import alexey.tools.common.misc.hasAnyMethod
 import alexey.tools.common.misc.hasMethod
 import com.artemis.BaseSystem
 import com.artemis.EntitySubscription
 import com.artemis.World
 import com.artemis.utils.IntBag
+import java.lang.reflect.Method
 
-open class MasterSystem: BaseSystem(), MasterEntityListener {
+open class MasterSystem: BaseSystem(), EntitySubscriptionListener {
 
-    var entityGroup = EntityGroup.DEFAULT
-        protected set
     private var entitySubscription: EntitySubscription? = null
 
 
@@ -23,36 +20,20 @@ open class MasterSystem: BaseSystem(), MasterEntityListener {
 
     fun getEntityIds(): IntBag = getEntitySubscription().entities
 
-    fun implementsProcess() = implementsProcess(javaClass)
+    open fun implementsProcess() = implementsProcess(javaClass)
 
-    fun hasEntityGroupListener() = hasEntityGroupListener(javaClass)
-
-    fun hasEntityListener() = hasEntityListener(javaClass)
-
-    fun hasEntitySubscriptionListener() = hasEntitySubscriptionListener(javaClass)
-
-    fun hasEntities() = hasEntityGroup() || hasEntitySubscription()
-
-    fun hasEntityGroup() = entityGroup !== EntityGroup.DEFAULT
+    open fun hasEntitySubscriptionListener() = hasEntitySubscriptionListener(javaClass)
 
     fun hasEntitySubscription() = entitySubscription != null
 
-    fun addListener(listener: MasterEntityListener) {
-        if (entityGroup === EntityGroup.DEFAULT)
-            getEntitySubscription().addSubscriptionListener(listener) else
-            entityGroup.addListener(listener)
-    }
-
-    fun addSelf() {
-        if (hasEntities() && hasEntitySubscriptionListener()) addListener(this)
+    open fun addSelf() {
+        if (hasEntitySubscriptionListener()) getEntitySubscriptionOrNull()?.addSubscriptionListener(this)
     }
 
 
 
     override fun processSystem() {
-        if (entityGroup === EntityGroup.DEFAULT)
-            getEntitySubscription().entities.forEach { process(it) } else
-            entityGroup.forEachInt { process(it) }
+        getEntitySubscription().entities.forEach { process(it) }
     }
 
     override fun setWorld(world: World) {
@@ -75,13 +56,12 @@ open class MasterSystem: BaseSystem(), MasterEntityListener {
 
     companion object {
 
-        private val MASTER_SYSTEM_CLASS = MasterSystem::class.java
-        private val PROCESS_SYSTEM_METHOD = MASTER_SYSTEM_CLASS.getDeclaredMethod("processSystem")
-        private val PROCESS_METHOD = MASTER_SYSTEM_CLASS.getDeclaredMethod("process", Int::class.java)
-        private val ENTITY_SUBSCRIPTION_LISTENER_METHODS =
+        val MASTER_SYSTEM_CLASS = MasterSystem::class.java
+        val PROCESS_SYSTEM_METHOD: Method = MASTER_SYSTEM_CLASS.getDeclaredMethod("processSystem")
+        val PROCESS_METHOD: Method = MASTER_SYSTEM_CLASS.getDeclaredMethod("process", Int::class.java)
+        val ENTITY_SUBSCRIPTION_LISTENER_METHODS =
             OnInsertSubscriptionListener::class.java.declaredMethods +
             OnRemoveSubscriptionListener::class.java.declaredMethods
-        private val ENTITY_GROUP_LISTENER_METHODS = EntityGroupListener::class.java.declaredMethods
 
 
 
@@ -89,13 +69,7 @@ open class MasterSystem: BaseSystem(), MasterEntityListener {
             type.hasMethod(PROCESS_METHOD, MASTER_SYSTEM_CLASS) ||
             type.hasMethod(PROCESS_SYSTEM_METHOD, MASTER_SYSTEM_CLASS)
 
-        fun hasEntityGroupListener(type: Class<out MasterSystem>) =
-            type.hasAnyMethod(ENTITY_GROUP_LISTENER_METHODS, MASTER_SYSTEM_CLASS)
-
         fun hasEntitySubscriptionListener(type: Class<out MasterSystem>) =
             type.hasAnyMethod(ENTITY_SUBSCRIPTION_LISTENER_METHODS, MASTER_SYSTEM_CLASS)
-
-        fun hasEntityListener(type: Class<out MasterSystem>) =
-            hasEntityGroupListener(type) || hasEntitySubscriptionListener(type)
     }
 }

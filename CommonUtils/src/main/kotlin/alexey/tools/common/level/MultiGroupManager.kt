@@ -19,6 +19,9 @@ class MultiGroupManager: Injector {
     fun putEntity(name: String, entityId: Int): Boolean =
         obtainGroup(name).put(entityId)
 
+    fun putEntity(groupId: Int, entityId: Int): Boolean =
+        getGroup(groupId).put(entityId)
+
     fun obtainGroup(name: String): EntityGroup {
         val id = idsByNames.computeIfAbsent(name, computeFunction)
         return groupsByIds.getOrExtendSet(id) { DefaultEntityGroup(name, id) }
