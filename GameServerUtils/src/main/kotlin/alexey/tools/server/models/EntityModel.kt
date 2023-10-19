@@ -2,6 +2,7 @@ package alexey.tools.server.models
 
 import alexey.tools.common.collections.convert
 import alexey.tools.common.context.ImmutableVariables
+import com.badlogic.gdx.math.Vector2
 
 class EntityModel(val x: Float = 0F,
                   val y: Float = 0F,
@@ -14,7 +15,7 @@ class EntityModel(val x: Float = 0F,
                   val shapes: List<ShapeModel> = emptyList(),
                   val properties: ImmutableVariables = ImmutableVariables.DEFAULT) {
 
-
+    val position: Vector2 get() = Vector2(x, y)
 
     fun with(x: Float = this.x, y: Float = this.y,
              width: Float = this.width, height: Float = this.height,
