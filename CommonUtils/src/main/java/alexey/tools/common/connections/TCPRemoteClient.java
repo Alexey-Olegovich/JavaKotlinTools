@@ -99,7 +99,7 @@ public class TCPRemoteClient <R, W> extends SocketConnection<R, W> implements In
     }
 
     @Override
-    public void awaitTermination(int milliseconds) throws InterruptedException {
+    public void awaitTermination(final long milliseconds) throws InterruptedException {
         synchronized (shutdownLock) {
             if (shutdown == 2) return;
             shutdownLock.wait(milliseconds);

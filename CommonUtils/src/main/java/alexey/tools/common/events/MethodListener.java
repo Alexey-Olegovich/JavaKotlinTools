@@ -2,7 +2,9 @@ package alexey.tools.common.events;
 
 import org.jetbrains.annotations.NotNull;
 
-public class MethodListener <T> implements NetConsumer<T> {
+import java.util.function.BiConsumer;
+
+public class MethodListener <P, T> implements NetConsumer<T>, BiConsumer<P, T> {
 
     private final MethodData method;
     private final Object object;
@@ -24,5 +26,10 @@ public class MethodListener <T> implements NetConsumer<T> {
     @Override
     public void accept(int id, @NotNull T event) {
         method.execute(object, id, event);
+    }
+
+    @Override
+    public void accept(P payload, T event) {
+        method.execute(object, payload, event);
     }
 }

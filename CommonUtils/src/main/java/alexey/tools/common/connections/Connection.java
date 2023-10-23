@@ -45,8 +45,8 @@ public interface Connection<R, W> {
     default boolean isTerminated() { return true; }
     default boolean isWorking() { return !isTerminated() && !isTerminating(); }
 
-    default void awaitTermination(final int milliseconds) throws InterruptedException {}
-    default void awaitTermination() throws InterruptedException { awaitTermination(0); }
+    default void awaitTermination(final long milliseconds) throws InterruptedException {}
+    default void awaitTermination() throws InterruptedException { awaitTermination(0L); }
 
     default Object attachment() { return null; }
     default void attach(final Object ob) {}

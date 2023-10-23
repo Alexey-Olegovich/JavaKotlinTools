@@ -164,7 +164,7 @@ public class TCPServer<R, W> extends SelectableConnection<R, W> {
     }
 
     @Override
-    public void awaitTermination(int milliseconds) throws InterruptedException {
+    public void awaitTermination(final long milliseconds) throws InterruptedException {
         worker.join(milliseconds);
     }
 

@@ -35,4 +35,12 @@ public class MethodData {
             throw new RuntimeException(e);
         }
     }
+
+    public void execute(@NotNull final Object target, @NotNull final Object payload, @NotNull final Object data) {
+        try {
+            method.invoke(target, payload, data);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

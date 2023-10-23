@@ -30,4 +30,13 @@ public class IgnoredMethodData extends MethodData {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void execute(@NotNull final Object target, @NotNull final Object payload, @NotNull final Object data) {
+        try {
+            method.invoke(target, payload);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

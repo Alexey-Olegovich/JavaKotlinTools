@@ -28,19 +28,19 @@ public class EventBusWrapper extends EventBus {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected DefaultGroupWrapper createGroup(Class type) {
-        return new DefaultGroupWrapper(parent.register(type));
+    protected Group createGroup(Class type) {
+        return new SyncGroupWrapper(parent.register(type));
     }
 
 
 
-    private class DefaultGroupWrapper<T> extends DefaultGroup<T> {
+    private class SyncGroupWrapper<T> extends SyncGroup<T> {
 
         private final Group<T> parent;
 
 
 
-        public DefaultGroupWrapper(final Group<T> group) {
+        public SyncGroupWrapper(final Group<T> group) {
             parent = group;
         }
 

@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.nio.channels.*;
 
-public class TCPClient<R, W> extends SocketConnection<R, W> implements Connection<R, W> {
+public class TCPClient<R, W> extends SocketConnection<R, W> {
 
     protected final Selector selector;
     protected final Thread worker;
@@ -75,7 +75,7 @@ public class TCPClient<R, W> extends SocketConnection<R, W> implements Connectio
     }
 
     @Override
-    public void awaitTermination(int milliseconds) throws InterruptedException {
+    public void awaitTermination(final long milliseconds) throws InterruptedException {
         worker.join(milliseconds);
     }
 

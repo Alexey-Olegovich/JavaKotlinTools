@@ -87,7 +87,7 @@ public class ConnectionWrapper <R, W> implements Connection<R, W>  {
     }
 
     @Override
-    public void awaitTermination(final int milliseconds) throws InterruptedException {
+    public void awaitTermination(final long milliseconds) throws InterruptedException {
         connection.awaitTermination(milliseconds);
     }
 
