@@ -8,7 +8,6 @@ public class TCPRemoteClient <R, W> extends SocketConnection<R, W> implements In
     protected int index = -1;
     protected byte shutdown = 0;
     protected final Object shutdownLock = new Object();
-    protected volatile Object attachment;
     protected final Collection<TCPRemoteClient<R, W>> disconnectQueue;
 
 
@@ -104,16 +103,6 @@ public class TCPRemoteClient <R, W> extends SocketConnection<R, W> implements In
             if (shutdown == 2) return;
             shutdownLock.wait(milliseconds);
         }
-    }
-
-    @Override
-    public void attach(Object ob) {
-        attachment = ob;
-    }
-
-    @Override
-    public Object attachment() {
-        return attachment;
     }
 
     @Override

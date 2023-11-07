@@ -2,6 +2,8 @@ package alexey.tools.common.connections;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+
 public class SyncQueueListener<R, W> extends QueueListener <R, W> {
 
     public SyncQueueListener(Connection<R, W> connection) {
@@ -26,7 +28,7 @@ public class SyncQueueListener<R, W> extends QueueListener <R, W> {
 
 
     @Override
-    public void send(W message) {
+    public void send(W message) throws IOException {
         synchronized(messages) {
             super.send(message);
         }
@@ -37,6 +39,12 @@ public class SyncQueueListener<R, W> extends QueueListener <R, W> {
     public void flush() {
         synchronized (messages) {
             super.flush();
+        }
+    }
+
+    public boolean isIdle() {
+        synchronized (messages) {
+            return super.isIdle();
         }
     }
 

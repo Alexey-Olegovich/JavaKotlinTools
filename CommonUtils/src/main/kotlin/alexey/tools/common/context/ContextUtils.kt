@@ -13,7 +13,7 @@ import java.util.concurrent.Executors
 fun RegistrableContext.registerExecutorService(backgroundExecutor: ExecutorService) =
     register(backgroundExecutor, ExecutorService::class.java, ExecutorService::shutdown)
 
-fun RegistrableContext.registerExecutorService(threads: Int): ExecutorService =
+fun RegistrableContext.registerExecutorService(threads: Int = Runtime.getRuntime().availableProcessors()): ExecutorService =
     Executors.newFixedThreadPool(threads).also { registerExecutorService(it) }
 
 fun RegistrableContext.registerEventBus() =

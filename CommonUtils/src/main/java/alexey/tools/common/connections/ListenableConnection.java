@@ -3,6 +3,7 @@ package alexey.tools.common.connections;
 public abstract class ListenableConnection<R, W> implements Connection<R, W> {
 
     private volatile Listener<R, W> listener;
+    protected volatile Object attachment;
 
 
 
@@ -52,5 +53,15 @@ public abstract class ListenableConnection<R, W> implements Connection<R, W> {
     @Override
     public Listener<R, W> getListener() {
         return listener;
+    }
+
+    @Override
+    public void attach(Object ob) {
+        attachment = ob;
+    }
+
+    @Override
+    public Object attachment() {
+        return attachment;
     }
 }

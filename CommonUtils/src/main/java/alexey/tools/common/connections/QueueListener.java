@@ -2,6 +2,8 @@ package alexey.tools.common.connections;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.nio.BufferOverflowException;
 import java.util.LinkedList;
 
 public class QueueListener <R, W> extends ConnectionWrapper <R, W> implements Connection.Listener <R, W> {
@@ -55,11 +57,11 @@ public class QueueListener <R, W> extends ConnectionWrapper <R, W> implements Co
 
 
     @Override
-    public void send(W message) {
+    public void send(W message) throws IOException {
         if (idle) try {
             super.send(message);
             return;
-        } catch (Throwable ignored) {
+        } catch (BufferOverflowException ignored) {
             idle = false;
         }
         messages.add(message);
@@ -84,17 +86,20 @@ public class QueueListener <R, W> extends ConnectionWrapper <R, W> implements Co
 
 
     public void flush() {
-        idle = true;
         W message = messages.poll();
         try {
             while (message != null) {
                 super.send(message);
                 message = messages.poll();
             }
+            idle = true;
         } catch (Throwable ignored) {
             messages.addFirst(message);
-            idle = false;
         }
+    }
+
+    public boolean isIdle() {
+        return idle;
     }
 
 
